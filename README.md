@@ -1,5 +1,10 @@
 # Chat Export Structurer
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub release](https://img.shields.io/github/v/release/1ch1n/chat-export-structurer)](https://github.com/1ch1n/chat-export-structurer/releases)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![GitHub issues](https://img.shields.io/github/issues/1ch1n/chat-export-structurer)](https://github.com/1ch1n/chat-export-structurer/issues)
+
 **Convert messy AI chat exports into clean, queryable SQLite archives.**
 
 This tool is the foundation layer of [MyChatArchive](https://mychatarchive.com) - coming soon - designed to make AI conversation data clean, portable, and fully yours.
