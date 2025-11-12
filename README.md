@@ -1,7 +1,7 @@
 # Chat Export Structurer
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/v/release/1ch1n/chat-export-structurer)](https://github.com/1ch1n/chat-export-structurer/releases)
+[![GitHub release](https://img.shields.io/github/v/release/1ch1n/chat-export-structurer?include_prereleases)](https://github.com/1ch1n/chat-export-structurer/releases)
 [![CI Tests](https://github.com/1ch1n/chat-export-structurer/actions/workflows/test.yml/badge.svg)](https://github.com/1ch1n/chat-export-structurer/actions/workflows/test.yml)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![GitHub issues](https://img.shields.io/github/issues/1ch1n/chat-export-structurer)](https://github.com/1ch1n/chat-export-structurer/issues)
