@@ -6,20 +6,32 @@
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![GitHub issues](https://img.shields.io/github/issues/1ch1n/chat-export-structurer)](https://github.com/1ch1n/chat-export-structurer/issues)
 
-**Convert messy AI chat exports into clean, queryable SQLite archives.**
+---
 
-This tool is the foundation layer of [MyChatArchive](https://mychatarchive.com) - coming soon - designed to make AI conversation data clean, portable, and fully yours.
+> **"The next era of AI won't be won by who prompts best. It will be won by who holds context best."**
+
+If you're building with AI, you know the problem: every conversation starts from zero, your best insights get buried in exported JSON, and there's no memory layer connecting it all.
+
+This tool is the foundation. A clean, local-first parser that turns messy AI exports into structured SQLite archives—ready for search, RAG, agents, or whatever you're building next.
+
+**Part of [MyChatArchive](https://mychatarchive.com)** — a full platform for AI memory and context. Launching Q1 2025.
+
+---
+
+## What It Does
+
+Convert messy AI chat exports into clean, queryable SQLite archives. Own your data. Build your memory layer.
 
 Supports ChatGPT, Claude (Anthropic), and Grok exports. No API keys, no cloud services, just local SQLite.
 
-## Features
+## Why Use This
 
-- **Multi-platform support** - ChatGPT, Anthropic Claude, and Grok
-- **Streaming parser** - Handles multi-GB files efficiently
-- **Full-text search** - Built-in FTS5 for instant lookups
-- **Stable IDs** - SHA1-based deduplication across imports
-- **Test mode** - Preview data before writing to database
-- **Offline** - Zero external dependencies
+- **Own your data** — Everything stays local. No cloud, no API keys, no tracking
+- **Search everything** — Built-in full-text search (FTS5) across all your conversations
+- **Never lose context** — SHA1-based deduplication keeps your archive clean across imports
+- **Multi-platform** — Works with ChatGPT, Claude, and Grok exports (more coming)
+- **Production-ready** — Streaming parser handles multi-GB files without breaking
+- **Safe testing** — Preview mode lets you inspect data before writing to database
 
 ## Installation
 
@@ -35,6 +47,8 @@ pip install -r requirements.txt
 - `tqdm` for progress indicators (optional)
 
 ## Quick Start
+
+Get started in under 2 minutes:
 
 ### 1. Export Your Data
 
@@ -250,15 +264,28 @@ sqlite3 examples/sample_archive.sqlite "SELECT DISTINCT title, platform FROM mes
 sqlite3 examples/sample_archive.sqlite "SELECT role, text FROM messages WHERE text LIKE '%learning%';"
 ```
 
+## What's Next
+
+This parser is the foundation. The full [MyChatArchive](https://mychatarchive.com) platform (launching Q1 2025) will add:
+
+- **Web UI** for browsing and filtering your archive
+- **Vector search** for semantic queries across conversations  
+- **AI synthesis** to surface insights and patterns
+- **Enhanced exports** to Markdown, CSV, and agent-ready formats
+
+This open-source tool will always remain free and stay at the core of the stack.
+
+**Want early access?** Star the repo and watch for updates, or check [MyChatArchive.com](https://mychatarchive.com).
+
+---
+
 ## Roadmap
 
 **Export Structurer (this tool):**
 - [x] ChatGPT, Claude, and Grok parsers
 - [ ] Additional platforms (Gemini, Perplexity, Copilot, etc.)
-- [ ] Enhanced output formats (Markdown, CSV)
-
-**Broader vision:**
-- [ ] Launch [MyChatArchive.com](https://mychatarchive.com) — full platform with web UI, vector search, and AI synthesis
+- [ ] Advanced deduplication and merge strategies
+- [ ] CLI improvements (progress bars, better error handling)
 
 ## Contributing
 
@@ -317,14 +344,14 @@ MIT License - free for everyone, including commercial use.
 
 See [LICENSE](LICENSE) for full terms.
 
-**Want a hosted solution?** Check out [MyChatArchive.com](https://mychatarchive.com) (coming soon) for:
-- Zero setup - just upload and search
-- Beautiful web interface
-- AI-powered search and synthesis
-- Cloud sync across devices
+**Want the full platform?** [MyChatArchive.com](https://mychatarchive.com) (launching Q1 2025) will add:
+- Web UI with zero setup
+- Vector search and AI synthesis
+- Team collaboration features
+- Cloud sync (optional - local-first stays free)
 
 ---
 
-**Built by Channing Chasko · [MyChatArchive.com](https://mychatarchive.com) (coming soon)**
+**Built by Channing Chasko · [MyChatArchive.com](https://mychatarchive.com) (Q1 2025)**
 
 Released under the [MIT License](LICENSE).
