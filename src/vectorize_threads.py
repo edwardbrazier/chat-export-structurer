@@ -8,6 +8,7 @@ Each vector represents an entire conversation thread
 import argparse
 import sqlite3
 from typing import List, Dict
+from datetime import datetime
 from collections import defaultdict
 from tqdm import tqdm
 from qdrant_client import QdrantClient
@@ -85,6 +86,48 @@ def thread_to_text(thread_data: Dict) -> str:
     return "\n".join(text_parts)
 
 
+def ensure_mapping_table(db_path: str):
+    """Ensure the qdrant_threads mapping table exists."""
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS qdrant_threads (
+            qdrant_id INTEGER PRIMARY KEY,
+            canonical_thread_id TEXT NOT NULL,
+            collection_name TEXT NOT NULL,
+            indexed_at TEXT NOT NULL,
+            UNIQUE(canonical_thread_id, collection_name)
+        )
+    """)
+    con.commit()
+    con.close()
+
+
+def save_qdrant_mapping(db_path: str, collection_name: str, mappings: List[tuple]):
+    """
+    Save Qdrant ID to thread ID mappings in SQLite.
+
+    Args:
+        db_path: Path to SQLite database
+        collection_name: Name of Qdrant collection
+        mappings: List of (qdrant_id, canonical_thread_id) tuples
+    """
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+
+    indexed_at = datetime.utcnow().isoformat()
+
+    for qdrant_id, thread_id in mappings:
+        cur.execute("""
+            INSERT OR REPLACE INTO qdrant_threads
+            (qdrant_id, canonical_thread_id, collection_name, indexed_at)
+            VALUES (?, ?, ?, ?)
+        """, (qdrant_id, thread_id, collection_name, indexed_at))
+
+    con.commit()
+    con.close()
+
+
 def create_qdrant_collection(client: QdrantClient, collection_name: str, vector_size: int):
     """Create or recreate Qdrant collection."""
     try:
@@ -116,6 +159,9 @@ def main():
     parser.add_argument("--limit", type=int, help="Limit number of threads (for testing)")
 
     args = parser.parse_args()
+
+    # Ensure mapping table exists
+    ensure_mapping_table(args.db)
 
     print(f"\n[*] Loading threads from SQLite: {args.db}")
     threads = load_threads_from_sqlite(args.db)
@@ -173,6 +219,7 @@ def main():
     batch_metadata = []
     points = []
     uploaded = 0
+    all_mappings = []  # Track (qdrant_id, thread_id) mappings
 
     for thread_id, thread_data in tqdm(thread_list, desc="Processing threads"):
         # Convert thread to text
@@ -193,8 +240,10 @@ def main():
                 # Store first 500 chars of conversation as preview
                 preview = text[:500] + ("..." if len(text) > 500 else "")
 
+                qdrant_id = uploaded + i
+
                 point = PointStruct(
-                    id=uploaded + i,
+                    id=qdrant_id,
                     vector=embedding.tolist(),
                     payload={
                         **metadata,
@@ -203,6 +252,9 @@ def main():
                     }
                 )
                 points.append(point)
+
+                # Track mapping for SQLite
+                all_mappings.append((qdrant_id, thread_id))
 
             # Upload batch
             client.upsert(collection_name=args.collection, points=points)
@@ -223,8 +275,10 @@ def main():
         ):
             preview = text[:500] + ("..." if len(text) > 500 else "")
 
+            qdrant_id = uploaded + i
+
             point = PointStruct(
-                id=uploaded + i,
+                id=qdrant_id,
                 vector=embedding.tolist(),
                 payload={
                     **metadata,
@@ -234,8 +288,16 @@ def main():
             )
             points.append(point)
 
+            # Track mapping for SQLite
+            all_mappings.append((qdrant_id, thread_id))
+
         client.upsert(collection_name=args.collection, points=points)
         uploaded += len(points)
+
+    # Save mappings to SQLite
+    print(f"\n[*] Saving Qdrant ID mappings to SQLite...")
+    save_qdrant_mapping(args.db, args.collection, all_mappings)
+    print(f"[+] Saved {len(all_mappings)} mappings to qdrant_threads table")
 
     # Verify upload
     collection_info = client.get_collection(collection_name=args.collection)
@@ -246,6 +308,7 @@ def main():
     print(f"  Points in collection: {collection_info.points_count}")
     print(f"  Qdrant URL: http://{args.host}:{args.port}/dashboard")
     print(f"\n[*] Each vector represents an entire conversation thread")
+    print(f"[*] Qdrant ID mappings stored in SQLite: qdrant_threads table")
 
 
 if __name__ == "__main__":
