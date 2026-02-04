@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "chat-archive": {
+      "command": "node",
+      "args": ["/home/edward/chat-export-structurer/backend/dist/index.js"],
+      "env": {
+        "MODE": "mcp",
+        "DATABASE_PATH": "/home/edward/chat-export-structurer/my_chats.sqlite",
+        "QDRANT_HOST": "localhost",
+        "QDRANT_PORT": "6335",
+        "QDRANT_COLLECTION": "chat_messages",
+        "PYTHON_SCRIPTS_PATH": "/home/edward/chat-export-structurer/src"
+      }
+    }
+  }
+}

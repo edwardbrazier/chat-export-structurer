@@ -1,0 +1,132 @@
+.chat-viewer-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+
+  mat-spinner {
+    margin-bottom: 1rem;
+  }
+}
+
+.chat-content {
+  .header-card {
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    mat-card-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .header-info {
+        flex: 1;
+      }
+    }
+  }
+
+  .messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .message {
+      display: flex;
+
+      &.user-message {
+        justify-content: flex-end;
+
+        .message-bubble {
+          background-color: #e3f2fd;
+          border-left: 4px solid #2196f3;
+        }
+      }
+
+      &.assistant-message {
+        justify-content: flex-start;
+
+        .message-bubble {
+          background-color: #f5f5f5;
+          border-left: 4px solid #757575;
+        }
+      }
+
+      .message-bubble {
+        max-width: 75%;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        .message-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+          .role {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: #666;
+          }
+
+          .timestamp {
+            font-size: 0.75rem;
+            color: #999;
+          }
+        }
+
+        .message-content {
+          line-height: 1.6;
+          word-wrap: break-word;
+
+          ::ng-deep {
+            p {
+              margin: 0.5rem 0;
+
+              &:first-child {
+                margin-top: 0;
+              }
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+
+            pre {
+              background-color: #282c34;
+              color: #abb2bf;
+              padding: 1rem;
+              border-radius: 4px;
+              overflow-x: auto;
+            }
+
+            code {
+              background-color: rgba(0, 0, 0, 0.05);
+              padding: 0.2rem 0.4rem;
+              border-radius: 3px;
+              font-family: 'Courier New', monospace;
+            }
+
+            pre code {
+              background-color: transparent;
+              padding: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

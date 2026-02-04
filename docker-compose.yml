@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: chat-archive-qdrant
+    ports:
+      - "127.0.0.1:6335:6333"
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    environment:
+      # Privacy: Disable all telemetry
+      - QDRANT__TELEMETRY_DISABLED=true
+    networks:
+      - chat-network
+
+  backend:
+    build: ./backend
+    container_name: chat-archive-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MODE=api
+      - API_PORT=5000
+      - API_HOST=0.0.0.0
+      - DATABASE_PATH=/data/my_chats.sqlite
+      - QDRANT_HOST=qdrant
+      - QDRANT_PORT=6333
+      - QDRANT_COLLECTION=chat_messages
+      - PYTHON_SCRIPTS_PATH=/app/scripts
+    volumes:
+      - ./my_chats.sqlite:/data/my_chats.sqlite:ro
+      - ./src:/app/scripts:ro
+    depends_on:
+      - qdrant
+    networks:
+      - chat-network
+
+  frontend:
+    build: ./frontend
+    container_name: chat-archive-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - chat-network
+
+networks:
+  chat-network:
+    driver: bridge

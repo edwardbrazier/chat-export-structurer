@@ -1,0 +1,72 @@
+<div class="search-container">
+  <mat-card class="search-card">
+    <mat-card-header>
+      <mat-card-title>Chat Archive Search</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="search-form">
+        <mat-form-field appearance="outline" class="search-input">
+          <mat-label>Search query</mat-label>
+          <input
+            matInput
+            [(ngModel)]="query"
+            (keyup.enter)="onSearch()"
+            placeholder="Enter your search query..."
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mode-select">
+          <mat-label>Search Mode</mat-label>
+          <mat-select [(ngModel)]="searchMode">
+            <mat-option value="keyword">Keyword (Fast)</mat-option>
+            <mat-option value="semantic">Semantic (AI)</mat-option>
+            <mat-option value="hybrid">Hybrid (Best)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="onSearch()" [disabled]="isLoading">
+          Search
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="isLoading" class="loading">
+    <mat-spinner></mat-spinner>
+    <p>Searching...</p>
+  </div>
+
+  <div *ngIf="!isLoading && results.length > 0" class="results">
+    <div class="results-header">
+      <h2>Found {{ results.length }} conversations</h2>
+      <span class="execution-time">{{ executionTime }}ms</span>
+    </div>
+
+    <mat-card *ngFor="let result of results" class="result-card" (click)="viewThread(result.threadId)">
+      <mat-card-header>
+        <mat-card-title>{{ result.title }}</mat-card-title>
+        <mat-card-subtitle>
+          {{ result.platform }} • {{ result.messageCount }} messages
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="preview">{{ truncatePreview(result.preview) }}</p>
+        <div class="metadata">
+          <mat-chip-set>
+            <mat-chip [color]="getMatchSourceColor(result.matchSource)">
+              {{ result.matchSource }}
+            </mat-chip>
+            <mat-chip>Score: {{ result.score.toFixed(3) }}</mat-chip>
+          </mat-chip-set>
+          <span class="date-range">
+            {{ result.firstTimestamp | date:'short' }} - {{ result.lastTimestamp | date:'short' }}
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!isLoading && results.length === 0 && query" class="no-results">
+    <p>No results found for "{{ query }}"</p>
+  </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="chat-viewer-container">
+  <div *ngIf="isLoading" class="loading">
+    <mat-spinner></mat-spinner>
+    <p>Loading conversation...</p>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <mat-card>
+      <mat-card-content>
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="goBack()">
+          Go Back
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!isLoading && !error && thread" class="chat-content">
+    <mat-card class="header-card">
+      <mat-card-header>
+        <button mat-icon-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-info">
+          <mat-card-title>{{ thread.title }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ thread.platform }} • {{ thread.messageCount }} messages •
+            {{ thread.firstTimestamp | date:'medium' }} - {{ thread.lastTimestamp | date:'medium' }}
+          </mat-card-subtitle>
+        </div>
+      </mat-card-header>
+    </mat-card>
+
+    <div class="messages-container">
+      <div
+        *ngFor="let message of thread.messages"
+        class="message"
+        [class.user-message]="isUser(message)"
+        [class.assistant-message]="isAssistant(message)"
+      >
+        <div class="message-bubble">
+          <div class="message-header">
+            <span class="role">{{ message.role }}</span>
+            <span class="timestamp">{{ message.timestamp | date:'short' }}</span>
+          </div>
+          <div class="message-content">
+            <markdown [data]="message.text"></markdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
