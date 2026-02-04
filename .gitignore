@@ -53,3 +53,6 @@ examples/*.json
 # Environment
 .env
 .env.local
+
+# Qdrant vector database storage
+qdrant_storage/
