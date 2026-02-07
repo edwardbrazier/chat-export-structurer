@@ -71,6 +71,10 @@ export class SearchComponent implements OnInit {
     this.router.navigate(['/chat', threadId]);
   }
 
+  onBrowse(): void {
+    this.router.navigate(['/browse']);
+  }
+
   getMatchSourceColor(source: string): string {
     switch (source) {
       case 'keyword': return 'primary';

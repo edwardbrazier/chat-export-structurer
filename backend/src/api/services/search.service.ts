@@ -39,14 +39,28 @@ export class SearchService {
   }
 
   private async hybridSearch(request: SearchRequest): Promise<ThreadResult[]> {
-    // Run both searches in parallel
-    const [keywordResults, semanticResults] = await Promise.all([
+    // Run both searches in parallel, with error handling
+    const [keywordResults, semanticResults] = await Promise.allSettled([
       Promise.resolve(this.sqliteService.keywordSearch(request)),
       this.qdrantService.semanticSearch(request),
     ]);
 
+    // Extract successful results
+    const keywordData = keywordResults.status === 'fulfilled' ? keywordResults.value : [];
+    const semanticData = semanticResults.status === 'fulfilled' ? semanticResults.value : [];
+
+    // Log if semantic search failed (for debugging)
+    if (semanticResults.status === 'rejected') {
+      console.warn('Semantic search failed, falling back to keyword-only:', semanticResults.reason);
+    }
+
+    // If both failed, return empty array
+    if (keywordData.length === 0 && semanticData.length === 0) {
+      return [];
+    }
+
     // Merge using Reciprocal Rank Fusion (RRF)
-    return this.mergeWithRRF(keywordResults, semanticResults, request.limit || 10);
+    return this.mergeWithRRF(keywordData, semanticData, request.limit || 10);
   }
 
   private mergeWithRRF(

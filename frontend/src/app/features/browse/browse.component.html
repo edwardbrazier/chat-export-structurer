@@ -1,0 +1,50 @@
+<div class="browse-container">
+  <div class="browse-header">
+    <div class="header-left">
+      <button mat-icon-button (click)="goBack()" aria-label="Go back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1>Browse Chats</h1>
+    </div>
+    <mat-form-field appearance="outline" class="platform-filter">
+      <mat-label>Filter by Platform</mat-label>
+      <mat-select [(ngModel)]="selectedPlatform" (selectionChange)="onPlatformChange()">
+        <mat-option [value]="undefined">All Platforms</mat-option>
+        <mat-option *ngFor="let platform of platforms" [value]="platform">
+          {{ platform }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="threads-list">
+    <mat-card *ngFor="let thread of threads" class="thread-card" (click)="viewThread(thread.threadId)">
+      <mat-card-header>
+        <mat-card-title>{{ truncateTitle(thread.title) }}</mat-card-title>
+        <mat-card-subtitle>
+          {{ thread.platform }} • {{ thread.messageCount }} messages
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="metadata">
+          <span class="date-range">
+            {{ thread.firstTimestamp | date:'short' }} - {{ thread.lastTimestamp | date:'short' }}
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    <mat-spinner></mat-spinner>
+    <p>Loading more chats...</p>
+  </div>
+
+  <div *ngIf="!isLoading && !hasMore && threads.length > 0" class="end-message">
+    <p>No more chats to load</p>
+  </div>
+
+  <div *ngIf="!isLoading && threads.length === 0" class="no-threads">
+    <p>No chats found</p>
+  </div>
+</div>
