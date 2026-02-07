@@ -7,9 +7,15 @@
   "scripts": {
     "build": "tsc",
     "dev:api": "MODE=api tsx watch src/index.ts",
-    "dev:mcp": "MODE=mcp tsx src/index.ts",
+    "dev:mcp": "MODE=mcp MCP_TRANSPORT=stdio tsx src/index.ts",
+    "dev:mcp:stdio": "MODE=mcp MCP_TRANSPORT=stdio tsx watch src/index.ts",
+    "dev:mcp:http": "MODE=mcp MCP_TRANSPORT=http tsx watch src/index.ts",
+    "dev:mcp:both": "MODE=mcp MCP_TRANSPORT=both tsx watch src/index.ts",
     "start:api": "MODE=api node dist/index.js",
-    "start:mcp": "MODE=mcp node dist/index.js",
+    "start:mcp": "MODE=mcp MCP_TRANSPORT=stdio node dist/index.js",
+    "start:mcp:stdio": "MODE=mcp MCP_TRANSPORT=stdio node dist/index.js",
+    "start:mcp:http": "MODE=mcp MCP_TRANSPORT=http node dist/index.js",
+    "start:mcp:both": "MODE=mcp MCP_TRANSPORT=both node dist/index.js",
     "lint": "eslint src --ext .ts",
     "test": "echo \"Tests not yet implemented\" && exit 0"
   },

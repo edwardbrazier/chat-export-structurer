@@ -24,4 +24,13 @@ export const config = {
   pythonScripts: {
     path: process.env.PYTHON_SCRIPTS_PATH || path.resolve(__dirname, '../../../src'),
   },
+  mcp: {
+    transport: (process.env.MCP_TRANSPORT || 'stdio') as 'stdio' | 'http' | 'both',
+    http: {
+      port: parseInt(process.env.MCP_HTTP_PORT || '3001', 10),
+      host: process.env.MCP_HTTP_HOST || '127.0.0.1',
+      path: process.env.MCP_HTTP_PATH || '/mcp',
+      allowedHosts: process.env.MCP_ALLOWED_HOSTS?.split(','),
+    },
+  },
 };
